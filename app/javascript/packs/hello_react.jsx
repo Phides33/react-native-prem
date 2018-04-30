@@ -5,34 +5,82 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-class HelloUser extends React.Component {
+class AddLoc extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      username: 'tylermcginnis'
+      newLoc: ''
     }
 
-    this.handleChange = this.handleChange.bind(this)
+    this.updateNewLoc = this.updateNewLoc.bind(this)
+    this.handleAddNew = this.handleAddNew.bind(this)
   }
-  handleChange (e) {
+  updateNewLoc(e) {
     this.setState({
-      username: e.target.value
+      newLoc: e.target.value
+    })
+  }
+  handleAddNew() {
+    this.props.addNew(this.state.newLoc)
+    this.setState({
+      newLoc: ''
     })
   }
   render() {
-    return (
+    return(
       <div>
-        Hello {this.state.username} <br />
-        Change Name:
         <input
           type="text"
-          value={this.state.username}
-          onChange={this.handleChange}
+          value={this.state.newLoc}
+          onChange={this.updateNewLoc}
         />
+        <button onClick={this.handleAddNew}>Add Location</button>
       </div>
     )
   }
 }
 
-ReactDOM.render(<HelloUser />, document.getElementById('root'));
+class ShowLocs extends React.Component {
+  render() {
+    return (
+      <div>
+        <h4>Locations</h4>
+        <ul>
+          {this.props.locations.map((loc) => {
+            return <li> {loc} </li>
+          })}
+        </ul>
+      </div>
+    )
+  }
+}
+
+class GeoLocs extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      vehicle: 'BW 941 YD',
+      locs: [],
+    }
+
+    this.addLoc = this.addLoc.bind(this)
+  }
+  addLoc(loc) {
+    this.setState((state) => ({
+      locs: state.locs.concat([loc])
+    }))
+  }
+  render() {
+    return (
+      <div>
+        <h3>Vehicle: {this.state.vehicle}</h3>
+        <AddLoc addNew={this.addLoc}/>
+        <ShowLocs locations={this.state.locs}/>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<GeoLocs />, document.getElementById('root'));
