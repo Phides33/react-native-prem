@@ -83,37 +83,52 @@ class GeoLocs extends React.Component {
   }
 }
 
-// ReactDOM.render(<GeoLocs />, document.getElementById('root'));
+ReactDOM.render(<GeoLocs />, document.getElementById('root'));
 
-class NameForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
+// function NewDevice
+// renders MessageForm with NewDeviceMessage and Name input
+// upon submit, replaces content with WelcomeMessage
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+// function RunDemo
+// renders requested DemoStepVideo, by default first
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
+// function VehicleChoiceForm
+// renders choice list from VehicleList
+//         NewVehicle input field
 
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
+// function VehicleList
+// renders list of vehicles with edit / delete
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <textarea value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
-  }
-}
+// function VehicleOnRide
+// renders MessageForm with VehicleCloseMessage and Ride button
+// upon submit, replaces content with VehicleOnRideMessage
 
-ReactDOM.render(<NameForm />, document.getElementById('root'));
+// function VehicleParked
+// renders VehicleToParkMessage and triggers VehicleChoiceForm
+// upon submit, replaces content with VehicleParkedMessage
+
+// function ControllingAgentLoc
+// renders SignalAgentMessage and shows ControllingAgentLoc
+
+// function ShowAccount
+// renders
+// - Name
+// - VehicleList
+
+// function Menu
+// renders MenuChoice
+
+// function LocationMap
+// renders
+// - Banner
+// - a google map centered on the device gps coordinates
+// - if device is unknown trigger NewDevice
+// - if device is known :
+//   renders Menu
+//   - if parked vehicle is associated to it and device is close to vehicle or
+//     MenuChoice is "Ride Vehicle" then trigger VehicleOnRide
+//   - else trigger VehicleParked
+//   - if controlling agent is close or MenuChoice is "Signal Agent" then trigger ControllingAgentLoc
+//   - if MenuChoice is "Park vehicle" then trigger VehicleParked
+//   - if MenuChoice is "My account" then trigger ShowAccount
+//   - if MenuChoice is "Run demo" then trigger RunDemo
