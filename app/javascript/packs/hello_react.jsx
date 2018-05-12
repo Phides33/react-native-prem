@@ -5,89 +5,43 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-class AddLoc extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      newLoc: ''
-    }
-
-    this.updateNewLoc = this.updateNewLoc.bind(this)
-    this.handleAddNew = this.handleAddNew.bind(this)
-  }
-  updateNewLoc(e) {
-    this.setState({
-      newLoc: e.target.value
-    })
-  }
-  handleAddNew() {
-    this.props.addNew(this.state.newLoc)
-    this.setState({
-      newLoc: ''
-    })
-  }
-  render() {
-    return(
-      <div>
-        <input
-          type="text"
-          value={this.state.newLoc}
-          onChange={this.updateNewLoc}
-        />
-        <button onClick={this.handleAddNew}>Add Location</button>
-      </div>
-    )
-  }
-}
-
-class ShowLocs extends React.Component {
-  render() {
-    return (
-      <div>
-        <h4>Locations</h4>
-        <ul>
-          {this.props.locations.map((loc) => {
-            return <li> {loc} </li>
-          })}
-        </ul>
-      </div>
-    )
-  }
-}
-
-class GeoLocs extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      vehicle: 'BW 941 YD',
-      locs: [],
-    }
-
-    this.addLoc = this.addLoc.bind(this)
-  }
-  addLoc(loc) {
-    this.setState((state) => ({
-      locs: state.locs.concat([loc])
-    }))
-  }
-  render() {
-    return (
-      <div>
-        <h3>Vehicle: {this.state.vehicle}</h3>
-        <AddLoc addNew={this.addLoc}/>
-        <ShowLocs locations={this.state.locs}/>
-      </div>
-    )
-  }
-}
-
-ReactDOM.render(<GeoLocs />, document.getElementById('root'));
-
 // function NewDevice
 // renders MessageForm with NewDeviceMessage and Name input
 // upon submit, replaces content with WelcomeMessage
+class NewDevice extends React.Component {
+  render() {
+    if (this.props.currentUser.device !== 'XYZ') {
+      return <p>Hello! We haven't seen you before, how should we call you ?</p>;
+    }
+    return <VehicleCloseBy currentUser={this.props.currentUser} />;
+  }
+}
+
+// function VehicleCloseBy
+class VehicleCloseBy extends React.Component {
+  render() {
+    if (VEHICLE.device == this.props.currentUser.device) {
+      return <DistanceCompute currentUser={this.props.currentUser} currentVehicle={VEHICLE} />
+    }
+  }
+}
+
+// Compute distance
+class DistanceCompute extends React.Component {
+  render() {
+    const R = 6371e3;
+    const φ1 = this.props.currentUser.location[1] * Math.PI / 180;
+    const φ2 = this.props.currentVehicle.location[1] * Math.PI / 180;
+    const λ1 = this.props.currentUser.location[0] * Math.PI / 180;
+    const λ2 = this.props.currentVehicle.location[0] * Math.PI / 180;
+    const x = (λ2-λ1) * Math.cos((φ1+φ2)/2);
+    const y = (φ2-φ1);
+    const d = Math.round(Math.sqrt(x*x + y*y) * R);
+    return <p>Device is {this.props.currentUser.device} and Vehicle is {VEHICLE.device} are {d} meters away</p>;
+  }
+}
+
+//return <p>Welcome back Philippe! Your vehicle is x meters away. Do you intend to ride it?</p>;
 
 // function RunDemo
 // renders requested DemoStepVideo, by default first
@@ -122,6 +76,19 @@ ReactDOM.render(<GeoLocs />, document.getElementById('root'));
 // renders
 // - Banner
 // - a google map centered on the device gps coordinates
+class LocationMap extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Device: {this.props.currentUser.device}</h1>
+        <p>Longitude = {this.props.currentUser.location[0]}</p>
+        <p>Latitude = {this.props.currentUser.location[1]}</p>
+        <p></p>
+        <NewDevice currentUser={this.props.currentUser} />
+      </div>
+    );
+  }
+}
 // - if device is unknown trigger NewDevice
 // - if device is known :
 //   renders Menu
@@ -132,3 +99,12 @@ ReactDOM.render(<GeoLocs />, document.getElementById('root'));
 //   - if MenuChoice is "Park vehicle" then trigger VehicleParked
 //   - if MenuChoice is "My account" then trigger ShowAccount
 //   - if MenuChoice is "Run demo" then trigger RunDemo
+
+const USER = {
+  device: 'XYZ',
+  location: [-0.5893511, 44.8496514]};
+const VEHICLE = {
+  device: 'XYZ',
+  location: [-0.5899109, 44.8498465]};
+
+ReactDOM.render(<LocationMap currentUser={USER} />, document.getElementById('root'));
