@@ -21,7 +21,7 @@ class NewDevice extends React.Component {
 class VehicleCloseBy extends React.Component {
   render() {
     if (VEHICLE.device == this.props.currentUser.device) {
-      return <DistanceCompute currentUser={this.props.currentUser} currentVehicle={VEHICLE} />
+      return <DistanceCompute item1={this.props.currentUser} item2={VEHICLE} />
     }
   }
 }
@@ -30,14 +30,14 @@ class VehicleCloseBy extends React.Component {
 class DistanceCompute extends React.Component {
   render() {
     const R = 6371e3;
-    const φ1 = this.props.currentUser.location[1] * Math.PI / 180;
-    const φ2 = this.props.currentVehicle.location[1] * Math.PI / 180;
-    const λ1 = this.props.currentUser.location[0] * Math.PI / 180;
-    const λ2 = this.props.currentVehicle.location[0] * Math.PI / 180;
+    const φ1 = this.props.item1.location[1] * Math.PI / 180;
+    const φ2 = this.props.item2.location[1] * Math.PI / 180;
+    const λ1 = this.props.item1.location[0] * Math.PI / 180;
+    const λ2 = this.props.item2.location[0] * Math.PI / 180;
     const x = (λ2-λ1) * Math.cos((φ1+φ2)/2);
     const y = (φ2-φ1);
     const d = Math.round(Math.sqrt(x*x + y*y) * R);
-    return <p>Device is {this.props.currentUser.device} and Vehicle is {VEHICLE.device} are {d} meters away</p>;
+    return <p>Distance: {d} mètres</p>;
   }
 }
 
@@ -71,6 +71,17 @@ class DistanceCompute extends React.Component {
 
 // function Menu
 // renders MenuChoice
+class Menu extends React.Component {
+  render() {
+    return <h3>Menu list</h3>;
+  }
+}
+
+class Banner extends React.Component {
+  render() {
+    return <h2>PARKWIZ Moins d'argent dans le parcmètre</h2>;
+  }
+}
 
 // function LocationMap
 // renders
@@ -80,6 +91,8 @@ class LocationMap extends React.Component {
   render() {
     return (
       <div>
+        <Banner />
+        <Menu />
         <h1>Device: {this.props.currentUser.device}</h1>
         <p>Longitude = {this.props.currentUser.location[0]}</p>
         <p>Latitude = {this.props.currentUser.location[1]}</p>
